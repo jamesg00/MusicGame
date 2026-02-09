@@ -38,6 +38,7 @@ bool App::Init() {
 
     // Initialize Systems
     mContext->fontManager = std::make_unique<FontManager>();
+    mContext->textureManager = std::make_unique<TextureManager>(mContext->renderer);
     mContext->stateMachine = &mStateMachine;
 
     // Load Default Font
@@ -86,6 +87,10 @@ void App::Run() {
             accumulator -= Config::FrameDuration;
         }
 
+        if (mContext->shouldExit) {
+            mIsRunning = false;
+        }
+
         // Render
         SDL_SetRenderDrawColor(mContext->renderer, 0, 0, 0, 255); // Black background
         SDL_RenderClear(mContext->renderer);
@@ -100,6 +105,7 @@ void App::Run() {
 
 void App::Cleanup() {
     mContext->fontManager.reset(); // Destroy fonts before TTF_Quit
+    mContext->textureManager.reset();
 
     if (mContext->renderer) {
         SDL_DestroyRenderer(mContext->renderer);
