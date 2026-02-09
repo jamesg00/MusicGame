@@ -1,7 +1,11 @@
 #include "App.h"
 #include "Config.h"
 #include <SDL3/SDL.h>
+#include <SDL3_ttf/SDL_ttf.h>
 #include <iostream>
+
+// States
+#include "states/TitleState.h"
 
 App::App() : mContext(std::make_unique<Context>()), mIsRunning(false) {}
 
@@ -12,6 +16,11 @@ App::~App() {
 bool App::Init() {
     if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO)) {
         std::cerr << "SDL_Init failed: " << SDL_GetError() << std::endl;
+        return false;
+    }
+
+    if (!TTF_Init()) {
+        std::cerr << "TTF_Init failed: " << SDL_GetError() << std::endl;
         return false;
     }
 
@@ -26,6 +35,25 @@ bool App::Init() {
         std::cerr << "SDL_CreateRenderer failed: " << SDL_GetError() << std::endl;
         return false;
     }
+
+    // Initialize Systems
+    mContext->fontManager = std::make_unique<FontManager>();
+    mContext->stateMachine = &mStateMachine;
+
+    // Load Default Font
+    // Using 24 as a base size, similar to Python code
+    if (!mContext->fontManager->Load("default", "assets/upheavtt.ttf", 24)) {
+        std::cerr << "Failed to load default font assets/upheavtt.ttf" << std::endl;
+        // Proceeding might crash if states rely on it, but we log it.
+    }
+    // Load larger font for title
+    if (!mContext->fontManager->Load("title", "assets/upheavtt.ttf", 64)) {
+         std::cerr << "Failed to load title font assets/upheavtt.ttf" << std::endl;
+    }
+
+
+    // Push Initial State
+    mStateMachine.ChangeState(std::make_unique<TitleState>(mContext.get()));
 
     mIsRunning = true;
     return true;
@@ -49,11 +77,12 @@ void App::Run() {
             if (event.type == SDL_EVENT_QUIT) {
                 mIsRunning = false;
             }
+            mStateMachine.HandleEvent(event);
         }
 
         // Fixed timestep update
         while (accumulator >= Config::FrameDuration) {
-            // Update(Config::FrameDuration);
+            mStateMachine.Update(Config::FrameDuration);
             accumulator -= Config::FrameDuration;
         }
 
@@ -61,19 +90,17 @@ void App::Run() {
         SDL_SetRenderDrawColor(mContext->renderer, 0, 0, 0, 255); // Black background
         SDL_RenderClear(mContext->renderer);
 
-        // Draw a simple rect to show it's working
-        SDL_SetRenderDrawColor(mContext->renderer, 255, 0, 0, 255); // Red rect
-        SDL_FRect rect = {100.0f, 100.0f, 50.0f, 50.0f};
-        SDL_RenderFillRect(mContext->renderer, &rect);
+        mStateMachine.Render();
 
         SDL_RenderPresent(mContext->renderer);
 
-        // Simple delay to prevent 100% CPU usage if vsync is off or fast
         SDL_Delay(1);
     }
 }
 
 void App::Cleanup() {
+    mContext->fontManager.reset(); // Destroy fonts before TTF_Quit
+
     if (mContext->renderer) {
         SDL_DestroyRenderer(mContext->renderer);
         mContext->renderer = nullptr;
@@ -82,5 +109,6 @@ void App::Cleanup() {
         SDL_DestroyWindow(mContext->window);
         mContext->window = nullptr;
     }
+    TTF_Quit();
     SDL_Quit();
 }
