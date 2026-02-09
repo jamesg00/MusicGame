@@ -1,16 +1,36 @@
-# Music Rhythm Game
+# Rhythm Game Port (SDL3)
 
-This is a rhythm-based game developed using Pygame, where you can interact with music and sound effects and even customize the settings to enhance your experience. 
+This is a port of the Rhythm Game from Pygame to C++ using SDL3.
 
-## Features
-- **Music Volume Adjustment**: Fine-tune the background music volume using an intuitive meter.
-- **SFX Volume Adjustment**: Control the sound effects volume separately from the music.
-- **Settings Menu**: A customizable settings menu with an easy-to-use interface.
+## Prerequisites
 
-## How to Run
-1. Ensure you have Python and Pygame installed on your system.
-2. Run the `MusicRythm.py` script using Python.
-3. Explore the settings to adjust the volume or enjoy the game’s rhythm mechanics!
+- C++17 compatible compiler
+- CMake 3.14 or later
+- Internet access (for fetching SDL3 and dependencies)
 
-## Demo
-Watch the game in action [here](https://www.youtube.com/watch?v=HNVWIdoud4o).
+## Build Instructions
+
+1.  Create a build directory:
+    ```bash
+    mkdir build
+    cd build
+    ```
+
+2.  Configure the project:
+    ```bash
+    cmake ..
+    ```
+
+3.  Build:
+    ```bash
+    cmake --build .
+    ```
+
+4.  Run:
+    ```bash
+    ./RhythmGame
+    ```
+
+## Assets
+
+Place assets in the `assets/` directory at the project root. They will be copied to the build directory.
