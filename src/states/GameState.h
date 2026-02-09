@@ -1,15 +1,11 @@
 #pragma once
 #include "utils/IState.h"
 #include "core/Context.h"
-#include <SDL3_ttf/SDL_ttf.h>
-#include <iostream>
-#include <vector>
-#include <string>
 
-class MenuState : public IState {
+class GameState : public IState {
 public:
-    MenuState(Context* context);
-    ~MenuState();
+    GameState(Context* context);
+    ~GameState();
 
     void Enter() override;
     void Exit() override;
@@ -19,6 +15,4 @@ public:
 
 private:
     Context* mContext;
-    std::vector<std::string> mOptions;
-    int mSelectedOption = 0;
 };

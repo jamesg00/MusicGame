@@ -46,6 +46,8 @@ add_executable(RhythmGame
     src/core/Config.h
     src/assets/FontManager.cpp
     src/assets/FontManager.h
+    src/assets/TextureManager.cpp
+    src/assets/TextureManager.h
     src/utils/StateMachine.cpp
     src/utils/StateMachine.h
     src/utils/IState.h
@@ -53,6 +55,10 @@ add_executable(RhythmGame
     src/states/TitleState.h
     src/states/MenuState.cpp
     src/states/MenuState.h
+    src/states/GameState.cpp
+    src/states/GameState.h
+    src/states/SettingsState.cpp
+    src/states/SettingsState.h
 )
 
 target_include_directories(RhythmGame PUBLIC
