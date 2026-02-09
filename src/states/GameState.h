@@ -1,6 +1,9 @@
 #pragma once
 #include "utils/IState.h"
 #include "core/Context.h"
+#include "game/Chart.h"
+#include "game/NoteSystem.h"
+#include "game/Scoring.h"
 
 class GameState : public IState {
 public:
@@ -15,4 +18,9 @@ public:
 
 private:
     Context* mContext;
+    Chart mChart;
+    NoteSystem mNoteSystem;
+    Scoring mScoring;
+    double mSongTime;
+    size_t mNextNoteIndex;
 };

@@ -59,6 +59,12 @@ add_executable(RhythmGame
     src/states/GameState.h
     src/states/SettingsState.cpp
     src/states/SettingsState.h
+    src/game/Chart.cpp
+    src/game/Chart.h
+    src/game/NoteSystem.cpp
+    src/game/NoteSystem.h
+    src/game/Scoring.cpp
+    src/game/Scoring.h
 )
 
 target_include_directories(RhythmGame PUBLIC
@@ -73,3 +79,4 @@ target_link_libraries(RhythmGame PRIVATE SDL3::SDL3 SDL3_image::SDL3_image SDL3_
 
 # Copy assets
 file(COPY ${CMAKE_SOURCE_DIR}/assets DESTINATION ${CMAKE_BINARY_DIR}/assets)
+file(COPY ${CMAKE_SOURCE_DIR}/json DESTINATION ${CMAKE_BINARY_DIR}/json)
